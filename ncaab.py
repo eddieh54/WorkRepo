@@ -1,9 +1,10 @@
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
-from datetime import date
+import numpy as np
 
-url = 'https://sports.yahoo.com/college-basketball/scoreboard/?confId=all&dateRange=2025-02-12&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAAMtoh4fJ3rCg9UTs6JGQtby2puvhPkJTtFsUr_sAe4bu1EkOGgv46KV0YxvKocPHPSO_QavHRm7SNZOQ8JiIedGaTfs5pHawERnFOzdxP5VMqCLyWhtkJAgV78JhsFPJvIC5oAf4j2NomfmbN3G3W3LnETZjSCJqkrp24dnSzJhf'
+req_date = input("Enter the date you'd like to view scores for. (year-month-date) ")
+url = 'https://sports.yahoo.com/college-basketball/scoreboard/?confId=all&dateRange=' + req_date
 data = requests.get(url)
 
 gameinfolist = []
@@ -38,11 +39,15 @@ df['Home Team'] = home_team
 df['Home Name'] = home_team_name
 df['Away Team'] = away_team
 df['Away Name'] = away_team_name
+spreadlist += [np.nan] * (len(df) - len(spreadlist))
 df['Spread'] = spreadlist
 
 
-date = str(date.today())
+date = url[-10:]
 file_path = date + '.xlsx'
 df.to_excel(file_path, date, index = False)
+
+
+
 
 
